@@ -49,6 +49,7 @@ export default function ClienteHome() {
     title: '',
     description: '',
     requiredProfession: '',
+      address: '',
   });
 
   const loadRequests = async () => {
@@ -199,11 +200,12 @@ export default function ClienteHome() {
         await loadRequests();
       }
 
-      setRequestForm({
-        title: '',
-        description: '',
-        requiredProfession: '',
-      });
+    setRequestForm({
+  title: '',
+  description: '',
+  requiredProfession: '',
+  address: '',
+});
 
       setRequestMessage('¡Tu solicitud se publicó correctamente!');
     } catch (err) {
@@ -420,6 +422,29 @@ export default function ClienteHome() {
                   htmlFor="requiredProfession"
                   className="mb-1 block text-sm font-medium text-gray-700"
                 >
+                <div>
+  <label
+    htmlFor="request-address"
+    className="mb-1 block text-sm font-medium text-gray-700"
+  >
+    Dirección
+  </label>
+
+  <input
+    id="request-address"
+    name="address"
+    type="text"
+    value={requestForm.address}
+    onChange={handleRequestChange}
+    placeholder="Ej.: Calle San Martín 123"
+    autoComplete="street-address"
+    className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+  />
+
+  <p className="mt-1 text-xs text-gray-500">
+    La dirección todavía no se enviará hasta completar su integración con Backend.
+  </p>
+</div>
                   Oficio requerido
                 </label>
                 <select
