@@ -1,35 +1,37 @@
 
-
 const STATUS_CONFIG = {
   PENDIENTE: {
-    label: 'Pendiente',
-    className: 'bg-amber-100 text-amber-900 border-amber-300',
+    label: "Pendiente",
+    className: "bg-orange-50 text-orange-800 border-orange-300",
   },
   ACEPTADA: {
-    label: 'Aceptado',
-    className: 'bg-blue-100 text-blue-900 border-blue-300',
+    label: "Aceptado",
+    className: "bg-emerald-50 text-emerald-800 border-emerald-300",
   },
   EN_PROGRESO: {
-    label: 'En progreso',
-    className: 'bg-violet-100 text-violet-900 border-violet-300',
+    label: "En progreso",
+    className: "bg-violet-50 text-violet-800 border-violet-300",
   },
   EN_PROCESO: {
-    label: 'En proceso',
-    className: 'bg-violet-100 text-violet-900 border-violet-300',
+    label: "En proceso",
+    className: "bg-violet-50 text-violet-800 border-violet-300",
   },
   COMPLETADA: {
-    label: 'Completado',
-    className: 'bg-green-100 text-green-900 border-green-300',
+    label: "Completado",
+    className: "bg-blue-50 text-blue-800 border-blue-300",
   },
   RECHAZADA: {
-    label: 'Rechazado',
-    className: 'bg-red-100 text-red-900 border-red-300',
+    label: "Rechazado",
+    className: "bg-red-50 text-red-800 border-red-300",
   },
   CANCELADA: {
-    label: 'Cancelado',
-    className: 'bg-gray-100 text-gray-800 border-gray-300',
+    label: "Cancelado",
+    className: "bg-red-50 text-red-800 border-red-300",
   },
 };
+
+
+
 
 const PROFESSION_LABELS = {
   ELECTRICISTA: 'Electricidad',
@@ -104,12 +106,12 @@ function SolicitudCard({ solicitud }) {
         <h3 className="min-w-0 flex-1 text-lg font-semibold leading-6 text-gray-900">
           {solicitud.title || 'Solicitud sin título'}
         </h3>
-
-        <span
-          className={`inline-flex shrink-0 items-center rounded-full border px-3 py-1 text-xs font-semibold ${badge.className}`}
-        >
-          {badge.label}
-        </span>
+<span
+  className={`inline-flex shrink-0 items-center rounded-full border px-3 py-1 text-xs font-medium leading-4 ${badge.className}`}
+>
+  {badge.label}
+</span>
+        
       </div>
 
       {category && (
