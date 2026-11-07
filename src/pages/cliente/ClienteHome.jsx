@@ -3,20 +3,10 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import SolicitudCard from '../../components/SolicitudCard';
+import CrearSolicitud from '../../components/CrearSolicitud';
 import { getMyProfile, updateMyProfile } from '../../services/userService';
-import {
-  getMyServiceRequests,
-  createServiceRequest,
-} from '../../services/serviceRequestService';
+import { getMyServiceRequests } from '../../services/serviceRequestService';
 
-const professions = [
-  { value: 'ELECTRICISTA', label: 'Electricidad' },
-  { value: 'PLOMERO', label: 'Plomería' },
-  { value: 'GASISTA', label: 'Gas' },
-  { value: 'TECNICO_AC', label: 'Refrigeración / Aire acondicionado' },
-  { value: 'CERRAJERO', label: 'Cerrajería' },
-  { value: 'ALBANIL', label: 'Albañilería' },
-];
 
 function getApiMessage(error, fallback) {
   const message = error.response?.data?.message;
@@ -43,14 +33,7 @@ export default function ClienteHome() {
   const [loadingRequests, setLoadingRequests] = useState(true);
   const [requestError, setRequestError] = useState('');
   const [requestMessage, setRequestMessage] = useState('');
-  const [creatingRequest, setCreatingRequest] = useState(false);
 
-  const [requestForm, setRequestForm] = useState({
-    title: '',
-    description: '',
-    requiredProfession: '',
-      address: '',
-  });
 
   const loadRequests = async () => {
     setLoadingRequests(true);
@@ -161,62 +144,6 @@ export default function ClienteHome() {
       );
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handleRequestChange = (event) => {
-    const { name, value } = event.target;
-
-    setRequestForm((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
-
-    setRequestError('');
-    setRequestMessage('');
-  };
-
-  const handleCreateRequest = async (event) => {
-    event.preventDefault();
-    setCreatingRequest(true);
-    setRequestError('');
-    setRequestMessage('');
-
-    try {
-      const response = await createServiceRequest({
-        title: requestForm.title.trim(),
-        description: requestForm.description.trim(),
-        requiredProfession: requestForm.requiredProfession,
-      });
-
-      const createdRequest = response?.data ?? response;
-
-      if (createdRequest?.id) {
-        setRequests((previous) => [
-          createdRequest,
-          ...previous.filter((item) => item.id !== createdRequest.id),
-        ]);
-      } else {
-        await loadRequests();
-      }
-
-    setRequestForm({
-  title: '',
-  description: '',
-  requiredProfession: '',
-  address: '',
-});
-
-      setRequestMessage('¡Tu solicitud se publicó correctamente!');
-    } catch (err) {
-      setRequestError(
-        getApiMessage(
-          err,
-          'No pudimos publicar la solicitud. Intentá nuevamente.'
-        )
-      );
-    } finally {
-      setCreatingRequest(false);
     }
   };
 
@@ -373,126 +300,26 @@ export default function ClienteHome() {
               Contanos qué necesitás y elegí el oficio del profesional que
               buscás.
             </p>
+            <CrearSolicitud
+              onSolicitudCreada={(solicitud) => {
+                if (solicitud?.id) {
+                  setRequests((prev) => [
+                    solicitud,
+                    ...prev.filter((item) => item.id !== solicitud.id),
+                  ]);
+                } else {
+                  void loadRequests();
+                }
+                setRequestMessage('¡Tu solicitud se publicó correctamente!');
+              }}
+            />
 
-            <form onSubmit={handleCreateRequest} className="mt-5 space-y-4">
-              <div>
-                <label
-                  htmlFor="request-title"
-                  className="mb-1 block text-sm font-medium text-gray-700"
-                >
-                  Título del servicio
-                </label>
-                <input
-                  id="request-title"
-                  name="title"
-                  type="text"
-                  value={requestForm.title}
-                  onChange={handleRequestChange}
-                  minLength={5}
-                  maxLength={120}
-                  required
-                  placeholder="Ej.: Reparar una pérdida de agua"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="request-description"
-                  className="mb-1 block text-sm font-medium text-gray-700"
-                >
-                  Descripción
-                </label>
-                <textarea
-                  id="request-description"
-                  name="description"
-                  value={requestForm.description}
-                  onChange={handleRequestChange}
-                  minLength={10}
-                  maxLength={2000}
-                  required
-                  rows={4}
-                  placeholder="Describí el problema y el trabajo que necesitás."
-                  className="w-full resize-y rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="requiredProfession"
-                  className="mb-1 block text-sm font-medium text-gray-700"
-                >
-                <div>
-  <label
-    htmlFor="request-address"
-    className="mb-1 block text-sm font-medium text-gray-700"
-  >
-    Dirección
-  </label>
-
-  <input
-    id="request-address"
-    name="address"
-    type="text"
-    value={requestForm.address}
-    onChange={handleRequestChange}
-    placeholder="Ej.: Calle San Martín 123"
-    autoComplete="street-address"
-    className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
-  />
-
-  <p className="mt-1 text-xs text-gray-500">
-    La dirección todavía no se enviará hasta completar su integración con Backend.
-  </p>
-</div>
-                  Oficio requerido
-                </label>
-                <select
-                  id="requiredProfession"
-                  name="requiredProfession"
-                  value={requestForm.requiredProfession}
-                  onChange={handleRequestChange}
-                  required
-                  className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
-                >
-                  <option value="">Seleccioná un oficio</option>
-                  {professions.map((profession) => (
-                    <option
-                      key={profession.value}
-                      value={profession.value}
-                    >
-                      {profession.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {requestError && (
-                <p
-                  role="alert"
-                  className="rounded-lg bg-red-50 p-3 text-sm text-red-700"
-                >
-                  {requestError}
-                </p>
-              )}
-
-              {requestMessage && (
-                <p
-                  role="status"
-                  className="rounded-lg bg-green-50 p-3 text-sm text-green-700"
-                >
-                  {requestMessage}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={creatingRequest}
-                className="w-full rounded-full bg-orange-500 px-5 py-3 font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {creatingRequest ? 'Publicando...' : 'Publicar solicitud'}
-              </button>
-            </form>
+            {requestMessage && (
+              <p role="status" className="mt-4 rounded-lg bg-green-50 p-3 text-sm text-green-800">
+                {requestMessage}
+              </p>
+            )}
+            
           </article>
         </section>
 
