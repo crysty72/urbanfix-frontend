@@ -49,12 +49,12 @@ export default function CrearSolicitud({ onSolicitudCreada }) {
 
     try {
       // El contrato actual de Backend todavía no incluye address.
-      const respuesta = await createServiceRequest({
-        title: formulario.title.trim(),
-        requiredProfession: formulario.requiredProfession,
-        description: formulario.description.trim(),
-      });
-
+    const respuesta = await createServiceRequest({
+  title: formulario.title.trim(),
+  requiredProfession: formulario.requiredProfession,
+  description: formulario.description.trim(),
+  address: formulario.address.trim(),
+});
       setFormulario(formularioInicial);
       onSolicitudCreada?.(respuesta?.data ?? respuesta);
     } catch (err) {
@@ -144,9 +144,9 @@ export default function CrearSolicitud({ onSolicitudCreada }) {
           placeholder="Ej.: Calle San Martín 123"
           className="w-full rounded-lg border border-gray-300 px-4 py-3"
         />
-        <p className="mt-1 text-xs text-gray-500">
-          La dirección se incorporará al envío cuando Backend habilite ese campo.
-        </p>
+       <p className="mt-1 text-xs text-gray-500">
+  Indicá la dirección donde el técnico deberá realizar el trabajo.
+</p>
       </div>
 
       {error && (
