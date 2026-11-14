@@ -275,12 +275,12 @@ const solicitudesFiltradas =
 >
   {solicitudDetalle && (
     <div className="space-y-4">
-      <h3
-        id="titulo-detalle"
-        className="text-2xl font-bold text-[#011659]"
-      >
-        {solicitudDetalle.title}
-      </h3>
+     <h3
+  id="titulo-detalle"
+  className="min-w-0 text-2xl font-bold text-[#011659] [overflow-wrap:anywhere]"
+>
+  {solicitudDetalle.title}
+</h3>
 
       <p>{solicitudDetalle.description}</p>
 
