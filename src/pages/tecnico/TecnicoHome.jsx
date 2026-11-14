@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/useAuth";
 import { getAvailableServiceRequests } from "../../services/serviceRequestService";
 
@@ -19,6 +19,8 @@ export default function TecnicoHome() {
   const [cargando, setCargando] = useState(true);
   const [actualizando, setActualizando] = useState(false);
   const [error, setError] = useState("");
+  const [solicitudDetalle, setSolicitudDetalle] = useState(null);
+const dialogRef = useRef(null);
   const [filtroOficio, setFiltroOficio] = useState("TODOS");
   const profesionesDisponibles = [
   ...new Set(
@@ -247,14 +249,82 @@ const solicitudesFiltradas =
                         : "Sin fecha"}
                     </p>
                   </div>
+{/* BOTÓN VER DETALLES */}
+<button
+  type="button"
+  onClick={() => {
+    setSolicitudDetalle(solicitud);
+    dialogRef.current?.showModal();
+  }}
+  className="mt-5 w-full rounded-lg bg-[#011659] px-4 py-3 font-semibold text-white transition hover:bg-blue-900"
+>
+  Ver detalles
+</button>
 
-                  {/* Próximamente: Aceptar / Rechazar */}
-                  {/* Pendiente de endpoints del Backend */}
                 </article>
               ))}
             </div>
           )}
         </section>
+        {/* VENTANA DE DETALLES */}
+<dialog
+  ref={dialogRef}
+  onClose={() => setSolicitudDetalle(null)}
+  aria-labelledby="titulo-detalle"
+  className="m-auto max-h-[85vh] w-[92%] max-w-xl overflow-y-auto rounded-2xl bg-white p-6 text-gray-700 shadow-xl backdrop:bg-black/50"
+>
+  {solicitudDetalle && (
+    <div className="space-y-4">
+      <h3
+        id="titulo-detalle"
+        className="text-2xl font-bold text-[#011659]"
+      >
+        {solicitudDetalle.title}
+      </h3>
+
+      <p>{solicitudDetalle.description}</p>
+
+      <p>
+        <strong>Oficio:</strong>{" "}
+        {nombresProfesiones[
+          solicitudDetalle.requiredProfession
+        ] ||
+          solicitudDetalle.requiredProfession ||
+          "No informado"}
+      </p>
+
+      <p>
+        <strong>Dirección:</strong>{" "}
+        {solicitudDetalle.address || "No informada"}
+      </p>
+
+      <p>
+        <strong>Estado:</strong>{" "}
+        {solicitudDetalle.status}
+      </p>
+
+      <p>
+        <strong>Fecha:</strong>{" "}
+        {solicitudDetalle.createdAt &&
+        !Number.isNaN(
+          new Date(solicitudDetalle.createdAt).getTime()
+        )
+          ? new Date(
+              solicitudDetalle.createdAt
+            ).toLocaleDateString("es-AR")
+          : "Sin fecha"}
+      </p>
+
+      <button
+        type="button"
+        onClick={() => dialogRef.current?.close()}
+        className="w-full rounded-lg bg-[#FF5F15] px-4 py-3 font-semibold text-white"
+      >
+        Cerrar
+      </button>
+    </div>
+  )}
+</dialog>
       </main>
     </div>
   );
