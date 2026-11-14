@@ -351,10 +351,13 @@ export default function ClienteHome() {
           </article>
 
           {/* PUBLICAR SOLICITUD */}
-          <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-bold text-[#011659]">
-              Publicar solicitud
-            </h2>
+          <article
+  id="nueva-solicitud"
+  className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+>
+  <h2 className="text-xl font-bold text-[#011659]">
+    Publicar solicitud
+  </h2>
 
             <p className="mt-2 text-sm text-gray-600">
               Contanos qué necesitás y elegí el oficio del
@@ -407,16 +410,32 @@ export default function ClienteHome() {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={loadRequests}
-              disabled={loadingRequests}
-              className="rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-[#011659] hover:bg-gray-50 disabled:opacity-60"
-            >
-              {loadingRequests
-                ? "Actualizando..."
-                : "Actualizar lista"}
-            </button>
+<div className="flex flex-wrap items-center gap-2">
+  <button
+    type="button"
+    onClick={() => {
+      document
+        .getElementById("nueva-solicitud")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    }}
+    className="rounded-full bg-[#FF5F15] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#e9500c]"
+  >
+    + Nueva solicitud
+  </button>
+
+  <button
+    type="button"
+    onClick={loadRequests}
+    disabled={loadingRequests}
+    className="rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-[#011659] hover:bg-gray-50 disabled:opacity-60"
+  >
+    {loadingRequests ? "Actualizando..." : "Actualizar lista"}
+  </button>
+</div>
+
           </div>
 
           {/* FILTROS DE ESTADO */}
