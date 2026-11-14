@@ -201,16 +201,31 @@ const solicitudesFiltradas =
                   key={solicitud.id}
                   className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 transition hover:shadow-md"
                 >
-                  {/* TÍTULO Y ESTADO */}
-                  <div className="flex items-start justify-between gap-3">
-                    <h4 className="min-w-0 flex-1  font-bold text-[#011659] [overflow-wrap:anywhere]">
-                      {solicitud.title}
-                    </h4>
 
-                    <span className="shrink-0 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
-                      {solicitud.status}
-                    </span>
-                  </div>
+{/* TÍTULO, OFICIO Y ESTADO */}
+<div className="flex flex-wrap items-start justify-between gap-3">
+  <h4 className="min-w-0 flex-[1_1_160px] font-bold text-[#011659] [overflow-wrap:anywhere]">
+    {solicitud.title}
+  </h4>
+
+  <div className="flex flex-wrap items-center gap-2">
+    {/* Oficio */}
+    <span className="rounded-full border border-blue-300 bg-blue-50 px-3 py-1 text-xs font-semibold text-[#011659]">
+      {nombresProfesiones[solicitud.requiredProfession] ||
+        solicitud.requiredProfession ||
+        "Sin oficio"}
+    </span>
+
+    {/* Estado */}
+    <span className="rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-900">
+      {solicitud.status === "PENDIENTE"
+        ? "Pendiente"
+        : solicitud.status || "Sin estado"}
+    </span>
+  </div>
+</div>
+
+
 
                   {/* DESCRIPCIÓN */}
                   <p className="mt-4  text-sm leading-6 text-gray-700 [overflow-wrap:anywhere]">
@@ -219,18 +234,7 @@ const solicitudesFiltradas =
 
                   {/* DETALLES */}
                   <div className="mt-5 space-y-2 border-t border-gray-100 pt-4 text-sm text-gray-600">
-                    <p>
-                      <strong className="text-[#011659]">
-                        Oficio:
-                      </strong>{" "}
-                      {nombresProfesiones[
-                        solicitud.requiredProfession
-                      ] ||
-                        solicitud.requiredProfession ||
-                        "No informado"}
-                    </p>
-
-                    <p className=" [overflow-wrap:anywhere]">
+    <p className=" [overflow-wrap:anywhere]">
                       <strong className="text-[#011659]">
                         Dirección:
                       </strong>{" "}
