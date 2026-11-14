@@ -103,9 +103,10 @@ function SolicitudCard({ solicitud }) {
       )}
 
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <h3 className="min-w-0 flex-1 text-lg font-semibold leading-6 text-gray-900">
-          {solicitud.title || 'Solicitud sin título'}
-        </h3>
+<h3 className="min-w-0 flex-[1_1_180px] text-lg font-semibold leading-6 text-gray-900 [overflow-wrap:anywhere]">
+  {solicitud.title || "Solicitud sin título"}
+</h3>
+
 <span
   className={`inline-flex shrink-0 items-center rounded-full border px-3 py-1 text-xs font-medium leading-4 ${badge.className}`}
 >
@@ -121,25 +122,19 @@ function SolicitudCard({ solicitud }) {
       )}
 
       {solicitud.description && (
-        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-gray-600">
+        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-gray-600 [overflow-wrap:anywhere]">
           {solicitud.description}
         </p>
       )}
 
-      {solicitud.address && (
-        <p className="mt-4 flex items-start gap-2 text-sm text-gray-600">
-          <span aria-hidden="true">📍</span>
-          <span>{solicitud.address}</span>
-        </p>
-      )}
+     <p className="mt-4 flex min-w-0 items-start gap-2 text-sm text-gray-600">
+  <span aria-hidden="true">📍</span>
+  <span className="min-w-0 [overflow-wrap:anywhere]">
+    {solicitud.address?.trim() || "Dirección no informada"}
+  </span>
+</p>
 
-      <div className="mt-auto border-t border-gray-100 pt-4">
-        {profession && (
-          <p className="text-xs text-gray-500">
-            Oficio requerido: {profession.replaceAll('_', ' ')}
-          </p>
-        )}
-      </div>
+      <div className="mt-auto" />
     </article>
   );
 }
