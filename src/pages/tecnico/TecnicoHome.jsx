@@ -19,6 +19,22 @@ export default function TecnicoHome() {
   const [cargando, setCargando] = useState(true);
   const [actualizando, setActualizando] = useState(false);
   const [error, setError] = useState("");
+  const [filtroOficio, setFiltroOficio] = useState("TODOS");
+  const profesionesDisponibles = [
+  ...new Set(
+    solicitudes
+      .map((solicitud) => solicitud.requiredProfession)
+      .filter(Boolean)
+  ),
+];
+
+const solicitudesFiltradas =
+  filtroOficio === "TODOS"
+    ? solicitudes
+    : solicitudes.filter(
+        (solicitud) =>
+          solicitud.requiredProfession === filtroOficio
+      );
 
   const nombre = user?.name || "Técnico";
 
@@ -98,7 +114,7 @@ export default function TecnicoHome() {
                 Solicitudes disponibles
               </h3>
 
-              {!cargando && !error && (
+             {!cargando && !error && solicitudesFiltradas.length === 0 && (
                 <p className="mt-1 text-sm text-gray-500">
                   {solicitudes.length}{" "}
                   {solicitudes.length === 1
@@ -119,7 +135,30 @@ export default function TecnicoHome() {
                 : "Actualizar"}
             </button>
           </div>
+{/* FILTRO POR OFICIO */}
+<div className="mt-5 flex flex-wrap items-center gap-3">
+  <label
+    htmlFor="filtro-oficio"
+    className="text-sm font-semibold text-[#011659]"
+  >
+    Oficio:
+  </label>
 
+  <select
+    id="filtro-oficio"
+    value={filtroOficio}
+    onChange={(e) => setFiltroOficio(e.target.value)}
+    className="min-h-11 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-[#011659]"
+  >
+    <option value="TODOS">Todos los oficios</option>
+
+    {profesionesDisponibles.map((profesion) => (
+      <option key={profesion} value={profesion}>
+        {nombresProfesiones[profesion] || profesion}
+      </option>
+    ))}
+  </select>
+</div>
           {/* CARGANDO */}
           {cargando && (
             <p role="status" className="mt-6 text-gray-600">
@@ -138,12 +177,14 @@ export default function TecnicoHome() {
           )}
 
           {/* SIN SOLICITUDES */}
-          {!cargando && !error && solicitudes.length === 0 && (
+       {!cargando && !error && solicitudesFiltradas.length === 0 && (
             <div className="mt-6 rounded-xl border border-dashed border-gray-300 p-8 text-center">
-              <p className="font-semibold text-[#011659]">
-                No hay solicitudes disponibles
-              </p>
 
+<p className="font-semibold text-[#011659]">
+  {filtroOficio === "TODOS"
+    ? "No hay solicitudes disponibles"
+    : "No se encontraron solicitudes para este oficio"}
+</p>
               <p className="mt-2 text-sm text-gray-500">
                 Volvé a consultar más tarde para encontrar nuevos trabajos.
               </p>
@@ -151,16 +192,16 @@ export default function TecnicoHome() {
           )}
 
           {/* LISTADO DE SOLICITUDES */}
-          {!cargando && !error && solicitudes.length > 0 && (
+          {!cargando && !error && solicitudesFiltradas.length > 0 && (
             <div className="mt-6 grid gap-5 md:grid-cols-2">
-              {solicitudes.map((solicitud) => (
+              {solicitudesFiltradas.map((solicitud) => (
                 <article
                   key={solicitud.id}
                   className="min-w-0 rounded-2xl border border-gray-200 bg-white p-5 transition hover:shadow-md"
                 >
                   {/* TÍTULO Y ESTADO */}
                   <div className="flex items-start justify-between gap-3">
-                    <h4 className="min-w-0 flex-1 break-words font-bold text-[#011659] [overflow-wrap:anywhere]">
+                    <h4 className="min-w-0 flex-1  font-bold text-[#011659] [overflow-wrap:anywhere]">
                       {solicitud.title}
                     </h4>
 
@@ -170,7 +211,7 @@ export default function TecnicoHome() {
                   </div>
 
                   {/* DESCRIPCIÓN */}
-                  <p className="mt-4 break-words text-sm leading-6 text-gray-700 [overflow-wrap:anywhere]">
+                  <p className="mt-4  text-sm leading-6 text-gray-700 [overflow-wrap:anywhere]">
                     {solicitud.description}
                   </p>
 
@@ -187,7 +228,7 @@ export default function TecnicoHome() {
                         "No informado"}
                     </p>
 
-                    <p className="break-words [overflow-wrap:anywhere]">
+                    <p className=" [overflow-wrap:anywhere]">
                       <strong className="text-[#011659]">
                         Dirección:
                       </strong>{" "}
