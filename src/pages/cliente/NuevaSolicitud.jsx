@@ -63,9 +63,35 @@ export default function NuevaSolicitud() {
     setFotos((actuales) => actuales.filter((_, i) => i !== index));
   };
 
+  const validarUbicacion = () => {
+    if (!zona.trim()) {
+      return "La localidad o zona es obligatoria.";
+    }
+
+    const direccionLimpia = direccion.trim();
+    if (!direccionLimpia) {
+      return "La dirección exacta es obligatoria.";
+    }
+
+    if (direccionLimpia.length > 200) {
+      return "La dirección no puede superar los 200 caracteres.";
+    }
+
+    return "";
+  };
+
   const siguiente = (event) => {
     event.preventDefault();
     setError("");
+
+    if (paso === 3) {
+      const errorUbicacion = validarUbicacion();
+      if (errorUbicacion) {
+        setError(errorUbicacion);
+        return;
+      }
+    }
+
     setPaso((actual) => Math.min(actual + 1, 4));
   };
 
@@ -79,6 +105,13 @@ export default function NuevaSolicitud() {
 
     if (guardando) return;
 
+    const errorUbicacion = validarUbicacion();
+    if (errorUbicacion) {
+      setPaso(3);
+      setError(errorUbicacion);
+      return;
+    }
+
     setGuardando(true);
     setError("");
 
@@ -86,8 +119,8 @@ export default function NuevaSolicitud() {
       const solicitud = {
         title: `Solicitud de ${oficio}`,
         description: descripcion.trim(),
+        address: direccion.trim(),
       };
-
       // Si el cliente no conoce el oficio, no enviamos requiredProfession.
       if (profesiones[oficio]) {
         solicitud.requiredProfession = profesiones[oficio];
