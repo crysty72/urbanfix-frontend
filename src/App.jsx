@@ -5,17 +5,17 @@ import { useAuth } from "./context/useAuth";
 import Login from "./pages/Login";
 import AdminHome from "./pages/admin/AdminHome";
 import AdminUsers from "./pages/admin/AdminUsers";
+import TecnicoHome from "./pages/tecnico/TecnicoHome";
+import TecnicoWork from "./pages/tecnico/TecnicoWork";
+import ClienteHome from "./pages/cliente/ClienteHome";
+import NuevaSolicitud from "./pages/cliente/NuevaSolicitud";
 function Register() {
   return <h1>Registro</h1>;
 }
 
-function ClienteHome() {
-  return <h1>Panel Cliente</h1>;
-}
 
-function TecnicoHome() {
-  return <h1>Panel Técnico</h1>;
-}
+
+
 
 function App() {
   const { user } = useAuth();
@@ -52,6 +52,7 @@ function App() {
           }
         >
           <Route path="/cliente" element={<ClienteHome />} />
+          <Route path="/cliente/nueva-solicitud" element={<NuevaSolicitud />} />
         </Route>
 
         {/* Ruta privada - Técnico */}
@@ -66,6 +67,7 @@ function App() {
           }
         >
           <Route path="/tecnico" element={<TecnicoHome />} />
+          <Route path="/tecnico/trabajos" element={<TecnicoWork />} />
         </Route>
 
         {/* Ruta privada - Administrador */}
